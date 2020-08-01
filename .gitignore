@@ -3,7 +3,7 @@ Electron/releases
 Electron/*.zip
 Electron/*.kmz
 Electron/ffmpeg
-Electron/videos/1596200809232.mp4
+Electron/*.mp4
 Electron/ss
 
 # Miscellaneous

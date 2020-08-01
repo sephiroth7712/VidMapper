@@ -54,6 +54,12 @@ async function createThumbnail() {
 	});
 }
 
+// getLiveStreams()
+// 	.then(() => createThumbnail()
+// 		.then(() => renderVideo())
+// 		.catch((err) => console.log(err)))
+// 	.catch((err) => console.log(err))
+
 createThumbnail()
 	.then(() => renderVideo())
 	.catch((err) => console.log(err));
@@ -83,8 +89,8 @@ async function getLiveStreams() {
 					console.log(stream)
 					let key = stream["stream_key"]
 					let imgSrc = `http://159.65.145.166:5000/thumbnails/${key}.png`
-					document.getElementById('rec').innerHTML +=
-						"<div class='col s12 m6 l6 blue-grey darken-1'><div class='card hoverable' ><div class='card-image'><img height=200 src=" +
+					document.getElementById('rec').innerHTML =
+						"<div class='col s12 m6 l6 blue-grey darken-1'><div class='card hoverable' style = 'background-color: red;color: white;padding: 1px 5px;'><div class='card-image '><img height=200 src=" +
 						imgSrc +
 						// "' onclick=" +
 						// tmp +
@@ -94,7 +100,7 @@ async function getLiveStreams() {
 						// time +
 						'<br>Username: ' +
 						stream["username"] +
-						'</p></div></div></div>';
+						'</p></div></div></div>' + document.getElementById('rec').innerHTML
 				}
 			}
 			resolve()
@@ -104,8 +110,9 @@ async function getLiveStreams() {
 		}
 	})
 }
-getLiveStreams()
+// getLiveStreams()
 function renderVideo() {
+	getLiveStreams()
 	var files = fs.readdirSync('./thumbnails');
 
 	files.map((i) => {
