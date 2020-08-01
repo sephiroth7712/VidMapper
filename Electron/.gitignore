@@ -1,0 +1,7 @@
+node_modules
+releases
+*.zip
+*.kmz
+ffmpeg
+videos/1596200809232.mp4
+ss

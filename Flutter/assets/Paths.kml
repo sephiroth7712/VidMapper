@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Paths</name>
+	<gx:CascadingStyle kml:id="__managed_style_2A4C57B53D14C16C930D">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4.5</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_16B0D820C114C16C930D">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>3</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_044D4899CF14C16C930D">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_16B0D820C114C16C930D</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_2A4C57B53D14C16C930D</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="0A16E7857D14C16C930D">
+		<name>Cadell Road</name>
+		<LookAt>
+			<longitude>72.82330221906305</longitude>
+			<latitude>19.01178727338159</latitude>
+			<altitude>7.313136437846808</altitude>
+			<heading>30.60228422351994</heading>
+			<tilt>2.996660885012707</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>640.9568093349662</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_044D4899CF14C16C930D</styleUrl>
+		<LineString>
+			<coordinates>
+				72.83863612638478,19.03255517720254,3.000904609686048 72.83859046235655,19.03120823807722,4.821848059095637 72.83850977202395,19.03060006159244,2.877439287816626 72.83743968931648,19.02854468730076,4.11408839574068 72.83538220104847,19.02470263118876,4.419323669951214 72.83451887283795,19.02296279302004,2.883146149213673 72.8337095208668,19.02172477283082,4.374999051884179 72.83176556478659,19.01927037871329,5.349613665952225 72.82975525627853,19.01685130769192,5.430351106036286 72.82730602282371,19.01539294252786,6.330381098007734 72.82628235847778,19.01462056289214,7.975629371155479 72.82431904748329,19.01331836736535,7.321122450595743 72.82188371472778,19.0121216534192,7.229171538271624 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>

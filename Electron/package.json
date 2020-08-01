@@ -1,0 +1,27 @@
+{
+  "name": "vidmapper",
+  "version": "1.0.0",
+  "description": "A desktop app for geotagginf videos",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^9.1.1",
+    "electron-splashscreen": "^1.0.0",
+    "express": "^4.17.1",
+    "ffprobe": "^1.1.0",
+    "ffprobe-electron": "^1.1.2",
+    "ffprobe-static": "^3.0.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "parse-kml": "^1.0.1",
+    "video-thumb": "0.0.3",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "archiver": "^5.0.0",
+    "axios": "^0.19.2"
+  }
+}

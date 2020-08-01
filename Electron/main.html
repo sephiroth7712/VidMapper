@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%">
+
+<head>
+    <title>VidMapper</title>
+    <link rel="stylesheet" href="assets/css/materialize.min.css">
+    <link href="assets/css/iconfont/material-icons.css" rel="stylesheet">
+
+    <style>
+        div {
+            background-color: #141421;
+            color: white;
+        }
+
+        .footer-bg {
+            background-color: #303050;
+        }
+
+        .row-margin {
+            margin-bottom: 0px;
+        }
+
+        label {
+            font-size: 12px;
+            color: white;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        .label-tag {
+            font-size: 13px;
+            font-weight: bold;
+
+        }
+    </style>
+</head>
+
+<body style="min-height: 100%; margin: 0;">
+    <div class="row center-align row-margin">
+        <div class="col s12 m4 l5 center-align">
+            <p></p>
+            <!-- Video Thumbnail on the top left -->
+            <div class="card">
+                <div class="card-image">
+                    <video class="responsive-video" controls id="vid"></video>
+                </div>
+            </div>
+
+            <!-- Map Image (Left Centre) -->
+            <div class="row s12 m6 l5">
+                <img class="responsive-img" id="preview_img"
+                    src="https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=13&size=600x300&maptype=roadmap&key=AIzaSyDNWL6DtkDKG61COVF-GjhdrWoFw8vRXOs"
+                    alt="Map">
+            </div>
+
+            <!-- Blockquote for metadata -->
+            <blockquote class="footer-bg" id="metadata">
+                <h5 class="center-align">Metadata<br></h5>
+                <p class="left-align"><label class="label-tag">File Name: </label><label id="name"></label><br>
+                    <label class="label-tag">Size:</label> <label id="size"></label> <label>MB</label> <br>
+                    <label class="label-tag">Time:</label> <label id="date"></label> <label id="time"></label><br>
+                    <label class="label-tag">Duration:</label> <label id="duration"></label><br>
+                    <label class="label-tag">Bitrate:</label> <label id="bits"></label> <label>kB/s</label><br>
+                    <label class="label-tag">Resolution:</label> <label id="width"></label>x<label id="height"></label>
+                    @ <label id="fps"></label> fps</p>
+            </blockquote>
+        </div>
+        <div class="col s12 m8 l7 blue-grey darken-1" style="overflow: auto; height:100vh;">
+            <p>RECENT VIDEOS</p>
+            <div class="row blue-grey darken-1">
+                <div id="rec" style="margin-bottom: 10px;">
+                </div>
+            </div>
+
+            <!-- <div class="row">
+                <div class="col s12 m6 l6 blue-grey darken-1">
+                    <div class="card hoverable">
+                        <div class="card-image">
+                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
+                        </div>
+                        <div class="card-content">
+                            <p>I am a very simple card. I am good at containing small bits of information.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6 blue-grey darken-1">
+                    <div class="card hoverable">
+                        <div class="card-image">
+                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
+                        </div>
+                        <div class="card-content">
+                            <p>I am a very simple card. I am good at containing small bits of information.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6 blue-grey darken-1">
+                    <div class="card hoverable">
+                        <div class="card-image">
+                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
+                        </div>
+                        <div class="card-content">
+                            <p>I am a very simple card. I am good at containing small bits of information.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6 blue-grey darken-1">
+                    <div class="card hoverable">
+                        <div class="card-image">
+                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
+                        </div>
+                        <div class="card-content">
+                            <p>I am a very simple card. I am good at containing small bits of information.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div style="background-color: transparent; bottom: 0; position: absolute; right: 0;">
+                <!-- <button id="ss"
+                    class="fixed-action-btn btn-floating btn-large waves-effect waves-light green darken-3 right material-icons">
+                    check_circle
+                </button> -->
+                <button id="open"
+                    class="fixed-action-btn btn-floating btn-large waves-effect waves-light red darken-3 right material-icons">
+                    folder_open
+                </button><br><br><br>
+                <button id="merge"
+                    class="fixed-action-btn material-icons btn-floating btn-large waves-effect waves-light right amber darken-2">merge_type</button>
+            </div>
+        </div>
+    </div>
+    <script src="./setVideo.js"></script>
+    <script src="./index.js">
+
+    </script>
+    <script src="./metadata.js"></script>
+    <script src="./getPreviewMap.js"></script>
+
+</body>
+</html>

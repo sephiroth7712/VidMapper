@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <link href="assets/css/iconfont/material-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial;
+            color: white;
+        }
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+        }
+
+        .left {
+            left: 0;
+            background-color: #111;
+        }
+
+        .right {
+            right: 0;
+        }
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        /* .margin-back{
+            margin-top: 10px;
+        } */
+
+        @media screen {
+            video {
+                width: 50vw;
+            }
+        }
+
+        #back {
+            border-radius: 50%;
+            background-color: #141421;
+            border: none;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 15px;
+            margin: 4px 2px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function loadVideo() {
+            var vars = {};
+            var vid_url = decodeURI(window.location.href)
+            var parts = vid_url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+                vars[key] = value;
+            });
+            document.getElementById('vid').src = vars["vid_src"]
+            // console.log(vars["vid_src"])
+        }
+
+        window.onload = loadVideo
+
+    </script>
+
+</head>
+
+<body>
+
+    <div class="split left">
+        <button id="back" class="material-icons red">
+            arrow_back
+        </button>
+        <div class="centered">
+            <div class="card hoverable">
+                <div class="card-image">
+                    <video class="responsive-video" controls id="vid" src=""></video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./back.js"></script>
+
+    <div class="split right">
+        <div id="map" style="height:100%"></div>
+        <script src="assets/js/jquery-2.2.1.min.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+        <script src="map.js"></script>
+        <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNWL6DtkDKG61COVF-GjhdrWoFw8vRXOs&callback=initMap"
+            defer>
+            </script>
+    </div>
+</body>
+
+</html>
