@@ -4,9 +4,9 @@ var ffprobe = require('ffprobe'),
 function getMetadata() {
 	let vid_url;
 	if (process.platform == 'win32') {
-		vid_url = 'file://' + __dirname + '/videos/water_pipe.mp4';
+		vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
 	} else if (process.platform == 'linux') {
-		vid_url = 'file://' + __dirname + '/videos/water_pipe.mp4';
+		vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
 	}
 	var vid = document.getElementById('vid').src || vid_url;
 	if (process.platform == 'win32') {

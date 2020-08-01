@@ -3,15 +3,16 @@ const path = require('path');
 //const fs = require('fs');
 const archiver = require('archiver');
 const { remote } = require('electron');
+const extract = require('extract-zip')
 const dialog = electron.remote.dialog;
 
 var src = document.getElementById('vid').src;
 let vid_url;
 
 if (process.platform == 'win32') {
-	vid_url = 'file://' + __dirname + '/videos/water_pipe.mp4';
+	vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
 } else if (process.platform == 'linux') {
-	vid_url = 'file://' + __dirname + '/videos/water_pipe.mp4';
+	vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
 }
 
 document.getElementById('vid').src = src || vid_url;
@@ -21,10 +22,10 @@ var merge = document.getElementById('merge');
 var ss = document.getElementById('ss');
 
 // for opening file
-global.open_files_path = [ null, null ];
+global.open_files_path = [null, null];
 
 // empty array declaration for merging
-global.merge_files_path = [ null, null ];
+global.merge_files_path = [null, null];
 
 // FOR MERGING
 merge.addEventListener('click', () => {
@@ -34,11 +35,11 @@ merge.addEventListener('click', () => {
 				title: 'Select Video file',
 				defaultPath: path.join(__dirname, ''),
 				buttonLabel: 'Select',
-				properties: [ 'openFile' ],
+				properties: ['openFile'],
 				filters: [
 					{
 						name: ' Select the Video File',
-						extensions: [ 'mp4', 'webm', 'ogg' ]
+						extensions: ['mp4', 'webm', 'ogg']
 					}
 				]
 			})
@@ -52,11 +53,11 @@ merge.addEventListener('click', () => {
 							title: 'Select KML file',
 							defaultPath: path.join(__dirname, ''),
 							buttonLabel: 'Select',
-							properties: [ 'openFile' ],
+							properties: ['openFile'],
 							filters: [
 								{
 									name: ' Select the KML File',
-									extensions: [ 'kml' ]
+									extensions: ['kml']
 								}
 							]
 						})
@@ -72,7 +73,7 @@ merge.addEventListener('click', () => {
 										filters: [
 											{
 												name: 'Save the KMZ File',
-												extensions: [ 'kmz' ]
+												extensions: ['kmz']
 											}
 										]
 									})
@@ -85,7 +86,7 @@ merge.addEventListener('click', () => {
 											});
 
 											// Log any errors
-											archive.on('error', function(err) {
+											archive.on('error', function (err) {
 												throw err;
 											});
 
@@ -103,7 +104,7 @@ merge.addEventListener('click', () => {
 											archive.finalize();
 
 											//emptying the array
-											global.merge_files_path = [ null, null ];
+											global.merge_files_path = [null, null];
 										}
 									});
 							}
@@ -122,12 +123,12 @@ merge.addEventListener('click', () => {
 				title: 'Select the Video file',
 				defaultPath: path.join(__dirname, ''),
 				buttonLabel: 'Select',
-				properties: [ 'openFile' ],
+				properties: ['openFile'],
 
 				filters: [
 					{
 						name: 'Video File',
-						extensions: [ 'mp4', 'ogg', 'avi' ]
+						extensions: ['mp4', 'ogg', 'avi']
 					}
 				]
 			})
@@ -140,11 +141,11 @@ merge.addEventListener('click', () => {
 							title: 'Select KML file',
 							defaultPath: path.join(__dirname, ''),
 							buttonLabel: 'Select',
-							properties: [ 'openFile' ],
+							properties: ['openFile'],
 							filters: [
 								{
 									name: ' Select the KML File',
-									extensions: [ 'kml' ]
+									extensions: ['kml']
 								}
 							]
 						})
@@ -184,43 +185,59 @@ uploadFile.addEventListener('click', () => {
 				// Restricting the user to only Video Files.
 				filters: [
 					{
-						name: 'Video Files',
-						extensions: [ 'mp4', 'avi', 'ogg' ]
+						name: 'Video or KMZ Files',
+						extensions: ['mp4', 'webm', 'ogg','kmz']
 					}
 				],
-				properties: [ 'openFile' ]
+				properties: ['openFile']
 			})
 			.then((file) => {
 				if (!file.canceled) {
 					global.open_files_path[0] = file.filePaths[0].toString();
-					dialog
-						.showOpenDialog({
-							title: 'Select KML file',
-							defaultPath: path.join(__dirname, ''),
-							buttonLabel: 'Select',
-							properties: [ 'openFile' ],
-							filters: [
-								{
-									name: ' Select the KML File',
-									extensions: [ 'kml' ]
-								}
-							]
-						})
-						.then((file) => {
-							if (!file.canceled) {
-								// push the path of kml to the array
-								global.open_files_path[1] = file.filePaths[0].toString();
-								vid_url =
-									'player.html?vid_src=' +
-									global.open_files_path[0] +
-									'&?kml_src=' +
-									global.open_files_path[1];
-								vid_url = encodeURI(vid_url);
-								//emptying the array
-								global.open_files_path = [ null, null ];
-								electron.remote.getCurrentWindow().loadURL(`file://${__dirname}/${vid_url}`);
+					let extension = global.open_files_path[0].split(".")
+					extension = extension[extension.length - 1]
+					if (extension == "kmz") {
+						async function main () {
+							try {
+								await extract(global.open_files_path[0], { dir: __dirname + '/extracted' })
+								console.log('Extraction complete')
+							} catch (err) {
+								// handle any errors
+								console.error(err)
 							}
-						});
+						}
+						main()
+					}
+					else {
+						dialog
+							.showOpenDialog({
+								title: 'Select KML file',
+								defaultPath: path.join(__dirname, ''),
+								buttonLabel: 'Select',
+								properties: ['openFile'],
+								filters: [
+									{
+										name: ' Select the KML File',
+										extensions: ['kml']
+									}
+								]
+							})
+							.then((file) => {
+								if (!file.canceled) {
+									// push the path of kml to the array
+									global.open_files_path[1] = file.filePaths[0].toString();
+									vid_url =
+										'player.html?vid_src=' +
+										global.open_files_path[0] +
+										'&?kml_src=' +
+										global.open_files_path[1];
+									vid_url = encodeURI(vid_url);
+									//emptying the array
+									global.open_files_path = [null, null];
+									electron.remote.getCurrentWindow().loadURL(`file://${__dirname}/${vid_url}`);
+								}
+							});
+					}
 				}
 			})
 			.catch((err) => {
@@ -236,10 +253,10 @@ uploadFile.addEventListener('click', () => {
 				filters: [
 					{
 						name: 'Video Files',
-						extensions: [ 'mp4', 'avi', 'ogg' ]
+						extensions: ['mp4', 'avi', 'ogg']
 					}
 				],
-				properties: [ 'openFile' ]
+				properties: ['openFile']
 			})
 			.then((file) => {
 				if (!file.canceled) {

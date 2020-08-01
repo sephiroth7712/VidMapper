@@ -5,6 +5,7 @@ Electron/*.kmz
 Electron/ffmpeg
 Electron/*.mp4
 Electron/ss
+Electron/extracted
 
 # Miscellaneous
 *.class

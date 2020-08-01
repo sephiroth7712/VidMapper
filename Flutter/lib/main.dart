@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission/permission.dart';
@@ -15,6 +17,7 @@ import 'package:vidmapper/livestream.dart';
 import 'package:vidmapper/splashscreen.dart';
 import 'package:vidmapper/utils/LocationHelper.dart';
 import 'package:vidmapper/utils/SharedPreferenceHelper.dart';
+import 'package:vidmapper/widgets/LabelledIcon.dart';
 import 'package:xml/xml.dart';
 
 import 'Gallery.dart';
@@ -44,10 +47,13 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
   bool isRecording;
   LocationHelper locationHelper = new LocationHelper();
   SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();
+  Stopwatch _stopwatch;
 
   @override
   void initState() {
     super.initState();
+    //Stopwatch for recording video
+    _stopwatch = Stopwatch();
     _isRecording = false;
     _recordButtonBorderRadius = 24;
     _recordButtonMargin = 4;
@@ -56,7 +62,7 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    _mapAlignment = Alignment.topRight;
+    _mapAlignment = Alignment.topLeft;
     onNewCameraSelected(cameras.first);
     WidgetsBinding.instance.addObserver(this);
   }
@@ -138,6 +144,13 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
     });
   }
 
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   double _recordButtonBorderRadius = 24;
   double _recordButtonMargin = 4;
 
@@ -145,6 +158,8 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     //For fullscreen
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
+    double _iconSize = 36;
 
     print("Building main.dart");
     print(controller);
@@ -158,6 +173,25 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
       body: Stack(
         children: <Widget>[
           Align(alignment: Alignment.topCenter, child: _cameraPreviewWidget()),
+          Positioned(
+              right: 0,
+              top: MediaQuery.of(context).size.height / 2 - 60,
+              child: controller.value.isRecordingVideo
+                  ? Transform.rotate(
+                      angle: pi / 2,
+                      child: LabelledIcon(
+                          icon: Icon(
+                            Icons.fiber_manual_record,
+                            color: Colors.red,
+                          ),
+                          label: Text(
+                              _printDuration(Duration(
+                                  milliseconds:
+                                      _stopwatch.elapsedMilliseconds)),
+                              style: GoogleFonts.cabin(
+                                  fontSize: 15, color: Colors.white))),
+                    )
+                  : Container()),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -184,7 +218,7 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
                         child: controller.value.isRecordingVideo
                             ? Container(width: 0, height: 0)
                             : IconButton(
-                                iconSize: 32,
+                                iconSize: _iconSize,
                                 icon: Icon(Icons.photo),
                                 onPressed: () => goToGallery(context),
                               ),
@@ -195,6 +229,7 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
                         child: GestureDetector(
                           onTap: () {
                             _isRecording = !_isRecording;
+
                             setState(() {
                               _recordButtonBorderRadius = _isRecording ? 0 : 24;
                               _recordButtonMargin = _isRecording ? 16 : 4;
@@ -246,7 +281,7 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
                         child: controller.value.isRecordingVideo
                             ? Container(width: 0, height: 0)
                             : IconButton(
-                                iconSize: 32,
+                                iconSize: _iconSize,
                                 icon: Icon(Icons.settings),
                                 onPressed: () => goToSettings(context),
                               ),
@@ -312,6 +347,7 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
     // If the controller is updated then update the UI.
     controller.addListener(() {
       if (mounted) setState(() {});
+      print("Hello");
       if (controller.value.hasError) {
         showInSnackBar('Camera error ${controller.value.errorDescription}');
       }
@@ -350,6 +386,7 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
   }
 
   Future<String> startVideoRecording() async {
+    startStopwatch();
     if (!controller.value.isInitialized) {
       showInSnackBar('Error: select a camera first.');
       return null;
@@ -379,6 +416,15 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
       return null;
     }
     return filePath;
+  }
+
+  startStopwatch() {
+    _stopwatch.start();
+    new Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        // _elapsedTime = _stopwatch.elapsedMilliseconds;
+      });
+    });
   }
 
   startSavingCoordinates(String kmlFilePath) async {
@@ -452,6 +498,8 @@ class _CameraHomeState extends State<CameraHome> with WidgetsBindingObserver {
   }
 
   Future<void> stopVideoRecording() async {
+    _stopwatch.stop();
+    _stopwatch.reset();
     if (!controller.value.isRecordingVideo) {
       return null;
     }

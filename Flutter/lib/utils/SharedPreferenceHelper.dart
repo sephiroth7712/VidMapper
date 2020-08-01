@@ -49,6 +49,7 @@ class SharedPreferenceHelper {
   //Signin Helpers
   Future<void> setUsernameAndToken(String username, String token) async {
     await preferences.setString('username', username);
+    // await preferences.remove('toke');
     await preferences.setString('toke', token);
   }
 

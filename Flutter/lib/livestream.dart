@@ -368,7 +368,7 @@ class _LiveStreamState extends State<LiveStream> {
     cameras.add(CameraDescription(
       name: widget.cameras.first.name,
       lensDirection: _cameraLens,
-      //sensorOrientation: ,
+      // sensorOrientation: 0,
     ));
   }
 

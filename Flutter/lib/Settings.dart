@@ -3,6 +3,8 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vidmapper/models/preferences.dart';
+import 'package:vidmapper/splashscreen.dart';
+import 'package:vidmapper/utils/SharedPreferenceHelper.dart';
 import 'package:vidmapper/widgets/VidMapperScaffold.dart';
 
 import 'models/styles.dart';
@@ -25,8 +27,36 @@ TextStyle settingHeaderStyle = GoogleFonts.cabin(
 
 class _SettingsState extends State<Settings> {
   final Color videoHighlight = Colors.yellowAccent;
+  final Color locationHighlight = Styles.accentColor;
+  final Color appHighlight = Colors.greenAccent;
 
-  final Color storageHighlight = Colors.greenAccent;
+  refreshTheme() {
+    settingTitleStyle =
+        settingTitleStyle.merge(TextStyle(color: Styles.textColor));
+    settingSubtitleStyle =
+        settingSubtitleStyle.merge(TextStyle(color: Styles.subtitleColor));
+    settingHeaderStyle =
+        settingHeaderStyle.merge(TextStyle(color: Styles.textColor));
+  }
+
+  resetSettings() {
+    String username = Preferences.sharedPreferences.get("username");
+    String password = Preferences.sharedPreferences.get("toke");
+
+    Preferences.sharedPreferences.clear();
+    SharedPreferenceHelper sharedPreferenceHelper = SharedPreferenceHelper();
+    sharedPreferenceHelper.setUsernameAndToken(username, password);
+    setState(() {
+      Styles.updateTheme(Preferences.appTheme.defaultValue);
+      refreshTheme();
+    });
+  }
+
+  logOut() {
+    Preferences.sharedPreferences.clear();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => SplashScreen()));
+  }
 
   @override
   Widget build(Object context) {
@@ -69,7 +99,7 @@ class _SettingsState extends State<Settings> {
                   SettingsItem(
                     icon: Icon(
                       Icons.location_on,
-                      color: Styles.accentColor,
+                      color: locationHighlight,
                     ),
                     setting: Preferences.locationSampleRate,
                   ),
@@ -84,18 +114,90 @@ class _SettingsState extends State<Settings> {
                       setting: Preferences.appTheme,
                       icon: Icon(
                         Icons.image_aspect_ratio,
-                        color: storageHighlight,
+                        color: appHighlight,
                       ),
                       callBack: () {
                         setState(() {
-                          settingTitleStyle = settingTitleStyle
-                              .merge(TextStyle(color: Styles.textColor));
-                          settingSubtitleStyle = settingSubtitleStyle
-                              .merge(TextStyle(color: Styles.subtitleColor));
-                          settingHeaderStyle = settingHeaderStyle
-                              .merge(TextStyle(color: Styles.textColor));
+                          refreshTheme();
                         });
                       }),
+                  InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            // barrierDismissible: false,
+                            child: AlertDialog(
+                              title: Text("Reset Settings?"),
+                              content: Text(
+                                  "This will reset your settings to defaults.",
+                                  style: settingSubtitleStyle),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("No"),
+                                ),
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    resetSettings();
+                                  },
+                                  child: Text("Yes"),
+                                ),
+                              ],
+                            ));
+                      },
+                      child: ListTile(
+                        leading: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Styles.cardColor,
+                              // shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(Icons.restore, color: appHighlight)),
+                        title: Text("Reset Settings", style: settingTitleStyle),
+                        subtitle: Text("Restore settings to factory defaults",
+                            style: settingSubtitleStyle),
+                      )),
+                  SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          // barrierDismissible: false,
+                          child: AlertDialog(
+                            title: Text("Log Out?"),
+                            content: Text(
+                                "You will be logged out and the app will restart.",
+                                style: settingSubtitleStyle),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("No"),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  logOut();
+                                },
+                                child: Text("Yes"),
+                              ),
+                            ],
+                          ));
+                    },
+                    child: ListTile(
+                      leading: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Styles.cardColor,
+                            // shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(Icons.power_settings_new,
+                              color: appHighlight)),
+                      title: Text("Log Out", style: settingTitleStyle),
+                    ),
+                  )
                 ],
               ),
             ],

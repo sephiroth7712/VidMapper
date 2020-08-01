@@ -16,12 +16,12 @@
     "ffprobe-electron": "^1.1.2",
     "ffprobe-static": "^3.0.0",
     "fluent-ffmpeg": "^2.1.2",
-    "parse-kml": "^1.0.1",
     "video-thumb": "0.0.3",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "archiver": "^5.0.0",
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "extract-zip": "^2.0.1"
   }
 }
