@@ -64,11 +64,11 @@
     <script type="text/javascript">
         function loadVideo() {
             var vars = {};
-            var vid_url = decodeURI(window.location.href)
-            var parts = vid_url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+            var filesURL = decodeURI(window.location.href)
+            var parts = filesURL.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
                 vars[key] = value;
             });
-            document.getElementById('vid').src = vars["vid_src"]
+            document.getElementById('vid').src = `http://159.65.145.166:5000/video?fileName=${vars["files_src"]}`
             // console.log(vars["vid_src"])
         }
 
@@ -99,7 +99,7 @@
         <div id="map" style="height:100%"></div>
         <script src="assets/js/jquery-2.2.1.min.js"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js"></script>
-        <script src="map.js"></script>
+        <script src="mapServer.js"></script>
         <script
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNWL6DtkDKG61COVF-GjhdrWoFw8vRXOs&callback=initMap"
             async defer>

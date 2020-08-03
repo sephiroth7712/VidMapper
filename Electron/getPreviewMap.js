@@ -1,5 +1,5 @@
-const xml2js = require('xml2js');
-const parser = new xml2js.Parser();
+// const xml2js = require('xml2js');
+// const parser = new xml2js.Parser();
 
 function getMapStaticImage() {
 	let vid_url = document.getElementById('vid').src;
@@ -27,9 +27,17 @@ function getMapStaticImage() {
 		for (i = 0; i < output.length; i++) {
 			path += `|${output[i].lat},${output[i].lng}`;
 		}
-		api += path + api_key;
-		api = encodeURI(api);
-		document.getElementById('preview_img').src = api;
+		let final_api= api + path + api_key;
+		if(final_api.length>12478){
+			path = '&path=color:0xFF0000FF|geodesic:true|weight:2';
+			for (i = 0; i < output.length; i+=2) {
+				path += `|${output[i].lat},${output[i].lng}`;
+			}
+		}
+		final_api = api+path+api_key
+		console.log(final_api.length)
+		final_api = encodeURI(final_api);
+		document.getElementById('preview_img').src = final_api;
 	});
 }
 getMapStaticImage();

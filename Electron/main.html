@@ -5,11 +5,15 @@
     <title>VidMapper</title>
     <link rel="stylesheet" href="assets/css/materialize.min.css">
     <link href="assets/css/iconfont/material-icons.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Roboto:wght@100&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
     <style>
         div {
             background-color: #141421;
             color: white;
+            /* font-family: 'Montserrat'; */
         }
 
         .footer-bg {
@@ -21,17 +25,29 @@
         }
 
         label {
-            font-size: 12px;
+            /* font-size: 13px; */
             color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+            /* font-family: 'Roboto', sans-serif; */
         }
 
         p {
             font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
+        h5 {
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
         }
 
         .label-tag {
-            font-size: 13px;
-            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
 
         }
     </style>
@@ -44,7 +60,8 @@
             <!-- Video Thumbnail on the top left -->
             <div class="card">
                 <div class="card-image">
-                    <video class="responsive-video" controls id="vid" style="max-width: 640px; max-height: 480px;"></video>
+                    <video class="responsive-video" controls id="vid"
+                        style="max-width: 600px; max-height: 480px;"></video>
                 </div>
             </div>
 
@@ -58,7 +75,7 @@
             <!-- Blockquote for metadata -->
             <blockquote class="footer-bg" id="metadata">
                 <h5 class="center-align">Metadata<br></h5>
-                <p class="left-align"><label class="label-tag">File Name: </label><label id="name"></label><br>
+                <p class="left-align"><label class="label-tag">File Location: </label><label id="name"></label><br>
                     <label class="label-tag">Size:</label> <label id="size"></label> <label>MB</label> <br>
                     <label class="label-tag">Time:</label> <label id="date"></label> <label id="time"></label><br>
                     <label class="label-tag">Duration:</label> <label id="duration"></label><br>
@@ -68,7 +85,7 @@
             </blockquote>
         </div>
         <div class="col s12 m8 l7 blue-grey darken-1" style="overflow: auto; height:100vh;">
-            <p>RECENT VIDEOS</p>
+            <h5>RECENT VIDEOS</h5>
             <div class="row blue-grey darken-1">
                 <div id="rec" style="margin-bottom: 10px;">
                 </div>
@@ -84,43 +101,8 @@
                             <p>I am a very simple card. I am good at containing small bits of information.</p>
                         </div>
                     </div>
-                </div>
-                <div class="col s12 m6 l6 blue-grey darken-1">
-                    <div class="card hoverable">
-                        <div class="card-image">
-                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
-                        </div>
-                        <div class="card-content">
-                            <p>I am a very simple card. I am good at containing small bits of information.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m6 l6 blue-grey darken-1">
-                    <div class="card hoverable">
-                        <div class="card-image">
-                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
-                        </div>
-                        <div class="card-content">
-                            <p>I am a very simple card. I am good at containing small bits of information.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m6 l6 blue-grey darken-1">
-                    <div class="card hoverable">
-                        <div class="card-image">
-                            <video class="responsive-video" controls id="vid" src="test2.mp4"></video>
-                        </div>
-                        <div class="card-content">
-                            <p>I am a very simple card. I am good at containing small bits of information.</p>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+                </div>-->
             <div style="background-color: transparent; bottom: 0; position: absolute; right: 0;">
-                <!-- <button id="ss"
-                    class="fixed-action-btn btn-floating btn-large waves-effect waves-light green darken-3 right material-icons">
-                    check_circle
-                </button> -->
                 <button id="open"
                     class="fixed-action-btn btn-floating btn-large waves-effect waves-light red darken-3 right material-icons">
                     folder_open
@@ -130,12 +112,11 @@
             </div>
         </div>
     </div>
+    <script src="https://maps.google.com/maps/api/js?key=AIzaSyDNWL6DtkDKG61COVF-GjhdrWoFw8vRXOs"></script>
     <script src="./setVideo.js"></script>
-    <script src="./index.js">
-
-    </script>
+    <script src="./index.js"></script>
     <script src="./metadata.js"></script>
     <script src="./getPreviewMap.js"></script>
-
 </body>
+
 </html>

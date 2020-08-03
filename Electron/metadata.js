@@ -4,20 +4,24 @@ var ffprobe = require('ffprobe'),
 function getMetadata() {
 	let vid_url;
 	if (process.platform == 'win32') {
-		vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
+		vid_url = 'file:\\\\\\' + __dirname + '\\videos\\jb_nagar_drive.mp4';
 	} else if (process.platform == 'linux') {
-		vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
+		vid_url = 'file://' + __dirname + '/videos/jb_nagar_drive.mp4';
 	}
+
 	var vid = document.getElementById('vid').src || vid_url;
 	if (process.platform == 'win32') {
 		vid = vid.substring(8);
+		var split_vid = vid.split('\\');
+
 	} else if (process.platform == 'linux') {
 		vid = vid.substring(7);
+		var split_vid = vid.split('/');
+
 	}
 
-	var split_vid = vid.split('/');
 	ffprobe(vid, { path: ffprobeStatic.path })
-		.then(function(info) {
+		.then(function (info) {
 			// file name
 			var name = split_vid[split_vid.length - 1];
 			document.getElementById('name').innerHTML = name;
@@ -62,10 +66,9 @@ function getMetadata() {
 			var f = info['streams'][0].r_frame_rate.split('/');
 			document.getElementById('fps').innerHTML = f[0];
 		})
-		.catch(function(err) {
+		.catch(function (err) {
 			console.error(err);
 		});
 }
-
 getMetadata();
 module.exports = { getMetadata };

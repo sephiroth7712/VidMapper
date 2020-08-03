@@ -3,7 +3,7 @@ Electron/releases
 Electron/*.zip
 Electron/*.kmz
 Electron/ffmpeg
-Electron/*.mp4
+*.mp4
 Electron/ss
 Electron/extracted
 

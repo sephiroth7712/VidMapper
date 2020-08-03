@@ -3,16 +3,17 @@ const path = require('path');
 //const fs = require('fs');
 const archiver = require('archiver');
 const { remote } = require('electron');
-const extract = require('extract-zip')
+const extract = require('extract-zip');
+const { availableCodecs } = require('fluent-ffmpeg');
 const dialog = electron.remote.dialog;
 
 var src = document.getElementById('vid').src;
 let vid_url;
 
 if (process.platform == 'win32') {
-	vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
+	vid_url = 'file://' + __dirname + '/videos/jb_nagar_drive.mp4';
 } else if (process.platform == 'linux') {
-	vid_url = 'file://' + __dirname + '/videos/lok_bharti_drive.mp4';
+	vid_url = 'file://' + __dirname + '/videos/jb_nagar_drive.mp4';
 }
 
 document.getElementById('vid').src = src || vid_url;
@@ -62,51 +63,104 @@ merge.addEventListener('click', () => {
 							]
 						})
 						.then((file) => {
-							if (!file.canceled) {
-								// push the path of kml to the array
+							try {
 								global.merge_files_path[1] = file.filePaths[0].toString();
-								dialog
-									.showSaveDialog({
-										title: 'Save file to',
-										defaultPath: path.join(__dirname, ''),
-										buttonLabel: 'Save As',
-										filters: [
-											{
-												name: 'Save the KMZ File',
-												extensions: ['kmz']
+								let vid_name
+								let kml_name
+								let slash
+								if (process.platform == "win32") {
+									vid_name = global.merge_files_path[0].split("\\")
+									kml_name = global.merge_files_path[1].split("\\")
+									slash="\\"
+								}
+								else if (process.platform == "linux") {
+									vid_name = global.merge_files_path[0].split("/")
+									kml_name = global.merge_files_path[1].split("/")
+									slash = "/"
+								}
+								vid_name = vid_name[vid_name.length - 1]
+								vid_name = vid_name.split(".")
+								vid_name = vid_name[0]
+								kml_name = kml_name[kml_name.length - 1]
+								kml_name = kml_name.split(".")
+								kml_name = kml_name[0]
+								if (!file.canceled && (kml_name === vid_name)) {
+									// push the path of kml to the array
+									dialog
+										.showSaveDialog({
+											title: 'Save file to',
+											defaultPath: path.join(__dirname, slash+"kmz")+slash+vid_name,
+											buttonLabel: 'Save As',
+											filters: [
+												{
+													name: 'Save the KMZ File',
+													extensions: ['kmz']
+												}
+											]
+										})
+										.then((file) => {
+											if (!file.canceled) {
+												let output = fs.createWriteStream(file.filePath + '.kmz');
+												let archive = archiver('zip', {
+													gzip: true,
+													zlib: { level: 9 } // Sets the compression level.
+												});
+
+												// Log any errors
+												archive.on('error', function (err) {
+													throw err;
+												});
+
+												// pipe archive data to the output file
+												archive.pipe(output);
+
+												// append files
+												for (let i = 0; i < global.merge_files_path.length; i++) {
+													let name = global.merge_files_path[i].split('/');
+													name = name[name.length - 1];
+													let ext = name.split('.');
+													if (ext[1] === 'mp4') {
+
+														name = '/files/' + name;
+													}
+													archive.file(global.merge_files_path[i], { name: name });
+												}
+
+												// Wait for streams to complete
+												archive.finalize();
+												let video_path_array = '';
+												let kml_path_array = '';
+												// direct the video and kml to player.html
+												if (process.platform == 'win32') {
+													video_path_array = global.merge_files_path[0].split('\\')
+													kml_path_array = global.merge_files_path[1].split('\\')
+												}
+												else if (process.platform == 'linux') {
+													video_path_array = global.merge_files_path[0].split('/')
+													kml_path_array = global.merge_files_path[1].split('/')
+												}
+												let video_file = video_path_array[video_path_array.length - 1]
+												let kml_file = kml_path_array[kml_path_array.length - 1]
+
+												vid_url = 'player.html?vid_src=./videos/' + video_file + '&?kml_src=./kml/' + kml_file;
+												vid_url = encodeURI(vid_url);
+												if (process.platform == 'win32') {
+													let dir = __dirname
+													dir = dir.split('\\',).join('/')
+													electron.remote.getCurrentWindow().loadURL(`file://${dir}/${vid_url}`);
+												}
+												else if (process.platform == 'linux') {
+													electron.remote.getCurrentWindow().loadURL(`file://${__dirname}/${vid_url}`);
+												}
+
+												// emptying the array
+												global.merge_files_path = [null, null];
 											}
-										]
-									})
-									.then((file) => {
-										if (!file.canceled) {
-											let output = fs.createWriteStream(file.filePath);
-											let archive = archiver('zip', {
-												gzip: true,
-												zlib: { level: 9 } // Sets the compression level.
-											});
-
-											// Log any errors
-											archive.on('error', function (err) {
-												throw err;
-											});
-
-											// pipe archive data to the output file
-											archive.pipe(output);
-
-											// append files
-											for (let i = 0; i < global.merge_files_path.length; i++) {
-												let name = global.merge_files_path[i].split('/');
-												name = name[name.length - 1];
-												archive.file(global.merge_files_path[i], { name: name });
-											}
-
-											// Wait for streams to complete
-											archive.finalize();
-
-											//emptying the array
-											global.merge_files_path = [null, null];
-										}
-									});
+										});
+								}
+							}
+							catch (err) {
+								console.error(err)
 							}
 						})
 						.catch((err) => {
@@ -186,7 +240,7 @@ uploadFile.addEventListener('click', () => {
 				filters: [
 					{
 						name: 'Video or KMZ Files',
-						extensions: ['mp4', 'webm', 'ogg','kmz']
+						extensions: ['mp4', 'webm', 'ogg', 'kmz']
 					}
 				],
 				properties: ['openFile']
@@ -194,21 +248,33 @@ uploadFile.addEventListener('click', () => {
 			.then((file) => {
 				if (!file.canceled) {
 					global.open_files_path[0] = file.filePaths[0].toString();
-					let extension = global.open_files_path[0].split(".")
-					extension = extension[extension.length - 1]
-					if (extension == "kmz") {
-						async function main () {
+					let fileExtension = global.open_files_path[0].split('.');
+					let extension = fileExtension[fileExtension.length - 1];
+					let fileName = fileExtension[0].split('/')
+					fileName = fileName[fileName.length - 1]
+					if (extension == 'kmz') {
+						async function main() {
 							try {
-								await extract(global.open_files_path[0], { dir: __dirname + '/extracted' })
-								console.log('Extraction complete')
+								await extract(global.open_files_path[0], { dir: __dirname + '/extracted' });
+								global.open_files_path = [];
+								global.open_files_path.push(__dirname + `/extracted/files/${fileName}.mp4`)
+								global.open_files_path.push(__dirname + `/extracted/${fileName}.kml`)
+								vid_url =
+									'player.html?vid_src=' +
+									global.open_files_path[0] +
+									'&?kml_src=' +
+									global.open_files_path[1];
+								vid_url = encodeURI(vid_url);
+								// emptying the array
+								global.open_files_path = [null, null];
+								electron.remote.getCurrentWindow().loadURL(`file://${__dirname}/${vid_url}`);
 							} catch (err) {
 								// handle any errors
-								console.error(err)
+								console.error(err);
 							}
 						}
-						main()
-					}
-					else {
+						main();
+					} else {
 						dialog
 							.showOpenDialog({
 								title: 'Select KML file',
