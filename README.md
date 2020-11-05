@@ -9,10 +9,10 @@
   [![License](https://img.shields.io/badge/license-GNU-blue.svg)](LICENSE.md)
 
 </div>
+
 # Table of Contents
 + [About](#description)
 + [Getting Started](#getting_started)
-+ [Limitations](#limitations)
 + [Future Scope](#future_scope)
 + [File Structure](#file_structure)
 + [Contributing](#contributing)
