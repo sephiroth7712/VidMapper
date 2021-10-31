@@ -19,7 +19,7 @@ function getMapStaticImage() {
 		});
 		let output = kmlArray.map(([ lng, lat ]) => ({ lng, lat }));
 		let api = 'https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap';
-		let api_key = '&key=AIzaSyDNWL6DtkDKG61COVF-GjhdrWoFw8vRXOs';
+		let api_key = '&key=' + process.env.API_KEY;
 		api += `&markers=color:red|label:S|${output[0].lat},${output[0].lng}&markers=color:red|label:E|${output[
 			output.length - 1
 		].lat},${output[output.length - 1].lng}`;
@@ -35,7 +35,6 @@ function getMapStaticImage() {
 			}
 		}
 		final_api = api+path+api_key
-		console.log(final_api.length)
 		final_api = encodeURI(final_api);
 		document.getElementById('preview_img').src = final_api;
 	});
