@@ -6,14 +6,16 @@ const { app, BrowserWindow, Menu, ipcMain } = electron;
 
 global.filepath = undefined;
 
-app.on('ready', function () {
-	let splash = new BrowserWindow({
-		width: 640,
-		height: 480,
+const isPlatformDarwin = process.platform === 'darwin';
+
+app.on('ready', () => {
+	const splash = new BrowserWindow({
+		width: 1024,
+		height: 768,
 		icon: __dirname+'/assets/icons/logo_64x64.png',
 		frame: false,
-		backgroundColor: '#000000',
-		transparent:true
+		backgroundColor: '#0f0f0f',
+		transparent: false
 	});
 	splash.loadURL(
 		url.format({
@@ -23,7 +25,7 @@ app.on('ready', function () {
 		})
 	);
 	splash.show();
-	let main = new BrowserWindow({
+	const main = new BrowserWindow({
 		show: false,
 		icon: __dirname+'/assets/icons/logo_64x64.png',
 		webPreferences: {
@@ -45,12 +47,8 @@ app.on('ready', function () {
 	});
 
 	main.webContents.openDevTools();
-	// main.once('ready-to-show', () => {
-	// 	splash.destroy();
-	// 	main.maximize();
-	// });
 	main.on('window-all-closed', () => {
-		if (process.platform !== 'darwin') {
+		if (!isPlatformDarwin) {
 		  app.quit()
 		}
 	  })
