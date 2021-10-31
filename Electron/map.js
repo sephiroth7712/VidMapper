@@ -15,9 +15,10 @@ let headingString
 vid.ontimeupdate = function () {
 	updateMap();
 };
-function updateMap() {
+
+const updateMap = () => {
 	let curr_pos_index = Math.floor(vid.currentTime);
-	if (vid.currentTime == 0 || curr_pos_index == last_index) {
+	if (vid.currentTime === 0 || curr_pos_index === last_index) {
 		return;
 	}
 	last_index = curr_pos_index;
@@ -27,7 +28,7 @@ function updateMap() {
 		markers[2].setMap(null);
 		markers.splice(2, 1);
 	}
-	if (headingExists === true) {
+	if (headingExists) {
 		let icon_type
 		if (curr_pos_index >= headingString.length) {
 			icon_type = Math.floor(headingString[headingString.length - 1] / 22.5)
@@ -42,7 +43,7 @@ function updateMap() {
 		addMarker(positions[curr_pos_index], 'Curr', -1);
 	}
 
-	if (completed_path != undefined) {
+	if (completed_path !== undefined) {
 		completed_path.setMap(null)
 	}
 	let currentLocation = document.getElementById("currentCoordinates")
@@ -58,7 +59,7 @@ function updateMap() {
 	completed_path.setMap(_map)
 }
 
-function initMap() {
+const initMap = () => {
 	let kml_url = decodeURI(window.location.href)
 	let vars = {};
 	let parts = kml_url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -67,12 +68,7 @@ function initMap() {
 	let kml = fs.readFileSync(vars['kml_src']).toString('utf-8');
 	parser.parseString(kml, function (err, result) {
 		// console.log(result['kml']['Document'][0]['Placemark'][0]['LineString'][0]['headings'])
-		if (result['kml']['Document'][0]['Placemark'][0]['LineString'][0]['headings'] === undefined) {
-			headingExists = false
-		}
-		else {
-			headingExists = true
-		}
+		headingExists = !result['kml']['Document'][0]['Placemark'][0]['LineString'][0]['headings'] === undefined
 		kmlString = result['kml']
 		['Document'][0]
 		['Placemark'][0]
@@ -87,7 +83,7 @@ function initMap() {
 			})
 		})
 		let output = kmlArray.map(([lng, lat]) => ({ lng, lat }));
-		if (headingExists === true) {
+		if (headingExists) {
 			headingString = result['kml']
 			['Document'][0]
 			['Placemark'][0]
@@ -134,21 +130,21 @@ function initMap() {
 	});
 }
 
-function clearMarkers() {
+const clearMarkers = () => {
 	for (i = 0; i < markers.length; i++) {
 		markers[i].setMap(null);
 	}
 }
 
-function deleteMarkers() {
+const deleteMarkers = () => {
 	clearMarkers();
 	markers = [];
 }
 
-function addMarker(pos, loc_type, icon_type) {
+const addMarker = (pos, loc_type, icon_type) => {
 	let marker = null;
 	const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-	if (loc_type == 'Start' || loc_type === 'End') {
+	if (loc_type === 'Start' || loc_type === 'End') {
 		marker = new google.maps.Marker({
 			position: { lat: pos.lat, lng: pos.lng },
 			// label: loc_type,
