@@ -6,10 +6,10 @@ function getMapStaticImage() {
 	vid_url = vid_url.split('/');
 	kml_name = vid_url[vid_url.length - 1].split('.');
 	kml_name = kml_name[0];
-	if (kml_name == '') return;
+	if (kml_name === '') return;
 	let kml = fs.readFileSync(`./kml/${kml_name}.kml`).toString('utf-8');
 	// let kmlString;
-	parser.parseString(kml, function(err, result) {
+	parser.parseString(kml, (err, result) => {
 		kmlString = result['kml']['Document'][0]['Placemark'][0]['LineString'][0]['coordinates'][0].trim().split(' ');
 		let kmlArray = kmlString.map((abc) => abc.trim().split(','));
 		kmlArray = kmlArray.map(function(elem) {
@@ -19,7 +19,7 @@ function getMapStaticImage() {
 		});
 		let output = kmlArray.map(([ lng, lat ]) => ({ lng, lat }));
 		let api = 'https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap';
-		let api_key = '&key=AIzaSyDNWL6DtkDKG61COVF-GjhdrWoFw8vRXOs';
+		let api_key = `&key=${process.env.API_KEY}`;
 		api += `&markers=color:red|label:S|${output[0].lat},${output[0].lng}&markers=color:red|label:E|${output[
 			output.length - 1
 		].lat},${output[output.length - 1].lng}`;
@@ -35,7 +35,6 @@ function getMapStaticImage() {
 			}
 		}
 		final_api = api+path+api_key
-		console.log(final_api.length)
 		final_api = encodeURI(final_api);
 		document.getElementById('preview_img').src = final_api;
 	});
