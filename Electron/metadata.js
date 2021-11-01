@@ -1,33 +1,35 @@
-var ffprobe = require('ffprobe'),
+const ffprobe = require('ffprobe'),
 	ffprobeStatic = require('ffprobe-static');
 
-function getMetadata() {
+const getMetadata = () => {
 	let vid_url;
-	if (process.platform == 'win32') {
+	const isPlatformWindows = process.platform === 'win32' || process.platform === 'win64'
+	const isPlatformLinux = process.platform === 'linux'
+	if (isPlatformWindows) {
 		vid_url = 'file:\\\\\\' + __dirname + '\\videos\\jb_nagar_drive.mp4';
-	} else if (process.platform == 'linux') {
+	} else if (isPlatformLinux) {
 		vid_url = 'file://' + __dirname + '/videos/jb_nagar_drive.mp4';
 	}
 
-	var vid = document.getElementById('vid').src || vid_url;
-	if (process.platform == 'win32') {
+	let vid = document.getElementById('vid').src || vid_url;
+	if (isPlatformWindows) {
 		vid = vid.substring(8);
-		var split_vid = vid.split('\\');
+		let split_vid = vid.split('\\');
 
-	} else if (process.platform == 'linux') {
+	} else if (isPlatformLinux) {
 		vid = vid.substring(7);
-		var split_vid = vid.split('/');
+		let split_vid = vid.split('/');
 
 	}
 
 	ffprobe(vid, { path: ffprobeStatic.path })
-		.then(function (info) {
+		.then((info) => {
 			// file name
-			var name = split_vid[split_vid.length - 1];
+			let name = split_vid[split_vid.length - 1];
 			document.getElementById('name').innerHTML = name;
 
 			// file size
-			var stats = fs.statSync(vid);
+			let stats = fs.statSync(vid);
 			document.getElementById('size').innerHTML = (stats['size'] / 1000000.0).toFixed(2);
 
 			// date
@@ -35,22 +37,22 @@ function getMetadata() {
 				document.getElementById('date').innerHTML = 'NA';
 				document.getElementById('time').innerHTML = '';
 			} else {
-				var t = info['streams'][0].tags.creation_time.split('T');
+				let t = info['streams'][0].tags.creation_time.split('T');
 				document.getElementById('date').innerHTML = t[0];
 				// time
-				var v = new Date(info['streams'][0].tags.creation_time);
+				let v = new Date(info['streams'][0].tags.creation_time);
 				v = v.toString().split(' ');
 				document.getElementById('time').innerHTML = v[4];
 			}
 
 			// duration
-			var duration = info['streams'][0].duration;
+			let duration = info['streams'][0].duration;
 
-			var totalNumberOfSeconds = duration;
-			var hours = parseInt(totalNumberOfSeconds / 3600);
-			var minutes = parseInt((totalNumberOfSeconds - hours * 3600) / 60);
-			var seconds = Math.floor(totalNumberOfSeconds - (hours * 3600 + minutes * 60));
-			var result =
+			let totalNumberOfSeconds = duration;
+			let hours = parseInt(totalNumberOfSeconds / 3600);
+			let minutes = parseInt((totalNumberOfSeconds - hours * 3600) / 60);
+			let seconds = Math.floor(totalNumberOfSeconds - (hours * 3600 + minutes * 60));
+			let result =
 				(hours > 0 ? (hours < 10 ? '0' + hours + ':' : hours + ':') : '') +
 				(minutes < 10 ? '0' + minutes : minutes) +
 				':' +
@@ -63,10 +65,10 @@ function getMetadata() {
 			// resolution
 			document.getElementById('width').innerHTML = info['streams'][0].width;
 			document.getElementById('height').innerHTML = info['streams'][0].height;
-			var f = info['streams'][0].r_frame_rate.split('/');
+			let f = info['streams'][0].r_frame_rate.split('/');
 			document.getElementById('fps').innerHTML = f[0];
 		})
-		.catch(function (err) {
+		.catch((err) => {
 			console.error(err);
 		});
 }
